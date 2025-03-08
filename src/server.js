@@ -1,6 +1,8 @@
 import http from 'http'
 import express from 'express'
 import usersRouter from './routes/users.js'
+import authRouter from './routes/auth.js'
+import regRouter from './routes/reg.js'
 
 const app = express()
 
@@ -20,6 +22,12 @@ app.use((req,res,next) =>{
 
 // Роутер для /users
 app.use(`/users`,usersRouter)
+
+// Роутер для /auth
+app.use(`/auth`,authRouter)
+
+// Роутер для /reg
+app.use(`/reg`,regRouter)
 
 // Обработчик для всех остальных путей
 app.use((req,res)=> {
