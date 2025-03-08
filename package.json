@@ -1,12 +1,14 @@
 {
   "name": "productivity-monitor-backend",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
+    "start": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mingiyan",
   "license": "ISC",
   "description": "",
   "dependencies": {

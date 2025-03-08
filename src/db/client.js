@@ -4,7 +4,7 @@ const { Client} = pkg
 const dbClient = new Client({
     user:'postgres',
     host:'localhost',
-    database:'postgres',
+    database:'productivity-monitor-db',
     password:'5567',
     post: 5432,
 })
