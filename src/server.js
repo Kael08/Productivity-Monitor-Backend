@@ -4,6 +4,7 @@ import usersRouter from './routes/users.js'
 import authRouter from './routes/auth.js'
 import regRouter from './routes/reg.js'
 import notesRouter from './routes/notes.js'
+import plansRouter from './routes/plans.js'
 
 const app = express()
 
@@ -32,6 +33,9 @@ app.use(`/reg`,regRouter)
 
 // Роутер для /notes(заметок)
 app.use(`/notes`,notesRouter)
+
+// Роутер для /plans(планов)
+app.use(`/plans`,plansRouter)
 
 // Обработчик для всех остальных путей
 app.use((req,res)=> {
