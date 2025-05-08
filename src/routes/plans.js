@@ -19,7 +19,8 @@ router.get('/', authenticateToken, async (req, res) => {
                 ti.is_completed AS item_is_completed,
                 ti.priority AS item_priority,
                 ti.created_at AS item_created_at,
-                ti.updated_at AS item_updated_at
+                ti.updated_at AS item_updated_at,
+                ti.deadline AS item_deadline
              FROM todo_lists tl
              LEFT JOIN todo_items ti ON tl.id = ti.todo_list_id
              WHERE tl.user_id = $1
@@ -51,6 +52,7 @@ router.get('/', authenticateToken, async (req, res) => {
                     description: row.item_description,
                     is_completed: row.item_is_completed,
                     priority: row.item_priority,
+                    deadline: row.item_deadline,
                     created_at: row.item_created_at,
                     updated_at: row.item_updated_at
                 })
@@ -180,7 +182,7 @@ router.delete('/delete', authenticateToken, async (req, res) => {
 router.post('/items/add', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId
-        const { list_id, description, priority} = req.body
+        const { list_id, description, priority,deadline} = req.body
 
         if (!list_id || !description) {
             return res.status(400).json({ error: 'Поля list_id и description обязательны' })
@@ -203,11 +205,29 @@ router.post('/items/add', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Приоритет должен быть от 0 до 10' })
         }
 
+        // Обработка deadline
+        let formattedDeadline = null
+        if (deadline !== undefined && deadline !== null && deadline !== "") {
+            // Проверка формата YYYY-MM-DD
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+            if (!dateRegex.test(deadline)) {
+                return res.status(400).json({ error: 'Некорректный формат даты. Используйте YYYY-MM-DD' })
+            }
+
+            // Проверка валидности даты
+            const dateObj = new Date(deadline)
+            if (isNaN(dateObj.getTime())) {
+                return res.status(400).json({ error: 'Некорректная дата' })
+            }
+
+            formattedDeadline = deadline
+        }
+
         const result = await dbClient.query(
-            `INSERT INTO todo_items (todo_list_id, description, priority)
-             VALUES ($1, $2, $3)
+            `INSERT INTO todo_items (todo_list_id, description, priority, deadline)
+             VALUES ($1, $2, $3, $4)
              RETURNING *`,
-            [list_id, description, priority || 0]
+            [list_id, description, priority || 0,deadline||null]
         )
 
         res.status(201).json(result.rows[0])
@@ -221,7 +241,7 @@ router.post('/items/add', authenticateToken, async (req, res) => {
 router.patch('/items/update', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId
-        const { item_id, description, is_completed, priority} = req.body
+        const { item_id, description, is_completed, priority, deadline} = req.body
 
         if (!item_id) {
             return res.status(400).json({ error: 'Поле item_id обязательно' })
@@ -264,6 +284,27 @@ router.patch('/items/update', authenticateToken, async (req, res) => {
             }
             updateFields.push(`priority = $${paramCount}`)
             updateValues.push(priority)
+            paramCount++
+        }
+
+        // Обработка deadline
+        let formattedDeadline = null
+        if (deadline !== undefined && deadline !== null && deadline !== "") {
+            // Проверка формата YYYY-MM-DD
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+            if (!dateRegex.test(deadline)) {
+                return res.status(400).json({ error: 'Некорректный формат даты. Используйте YYYY-MM-DD' })
+            }
+
+            // Проверка валидности даты
+            const dateObj = new Date(deadline)
+            if (isNaN(dateObj.getTime())) {
+                return res.status(400).json({ error: 'Некорректная дата' })
+            }
+
+            formattedDeadline = deadline
+            updateFields.push(`deadline = $${paramCount}`)
+            updateValues.push(formattedDeadline)
             paramCount++
         }
 

@@ -14,25 +14,6 @@ const REFRESH_SECRET=`your-refresh-token`
 router.post("/",async(req,res)=>{
     const {login,password} = req.body
     try{
-        /*const result = await dbClient.query(
-            `SELECT
-                user_credentials.*,
-                users.id AS user_id,
-                users.username AS username
-            FROM user_credentials 
-            INNER JOIN users
-            ON user_credentials.user_id=users.id
-            WHERE user_credentials.email=$1`,
-            [email]
-        )
-
-        if(result.rows.length===0)
-            return res.status(404).json({error:"Email не найден"})
-
-        if(result.rows[0].password===password)
-            res.status(200).json(result.rows[0])
-        else res.status(401).json({error:"Данные неверны"})*/
-
         // Получения пользователя по логину
         const userCredResult=await dbClient.query(
             `SELECT * FROM users_credentials WHERE login = $1`,
