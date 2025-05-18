@@ -11,7 +11,7 @@ router.get('/', authenticateToken, async (req, res) => {
         const result = await dbClient.query(
             `SELECT 
                 tl.id AS list_id,
-                tl.title AS list_title,
+                tl.title AS list_title,     
                 tl.created_at AS list_created_at,
                 tl.updated_at AS list_updated_at,
                 ti.id AS item_id,

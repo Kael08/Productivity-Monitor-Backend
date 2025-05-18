@@ -5,6 +5,7 @@ import authRouter from './routes/auth.js'
 import regRouter from './routes/reg.js'
 import notesRouter from './routes/notes.js'
 import plansRouter from './routes/plans.js'
+import customModesRouter from './routes/customModes.js'
 
 const app = express()
 
@@ -36,6 +37,9 @@ app.use(`/notes`,notesRouter)
 
 // Роутер для /plans(планов)
 app.use(`/plans`,plansRouter)
+
+// Роутер для /customModes(кастомных режимов)
+app.use(`/customModes`,customModesRouter)
 
 // Обработчик для всех остальных путей
 app.use((req,res)=> {
