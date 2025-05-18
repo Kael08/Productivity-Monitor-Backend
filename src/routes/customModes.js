@@ -52,7 +52,7 @@ router.post('/add', authenticateToken, async (req, res) => {
             [userId, name]
         )
         if (existingMode.rows.length > 0) {
-            return res.status(400).json({ error: 'Режим с таким именем уже существует для данного пользователя!' })
+            return res.status(409).json({ error: 'Режим с таким именем уже существует для данного пользователя!' })
         }
 
         const result = await dbClient.query(

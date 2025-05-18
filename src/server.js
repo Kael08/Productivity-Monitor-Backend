@@ -6,6 +6,7 @@ import regRouter from './routes/reg.js'
 import notesRouter from './routes/notes.js'
 import plansRouter from './routes/plans.js'
 import customModesRouter from './routes/customModes.js'
+import statisticsRouter from './routes/dailyStatistics.js'
 
 const app = express()
 
@@ -40,6 +41,9 @@ app.use(`/plans`,plansRouter)
 
 // Роутер для /customModes(кастомных режимов)
 app.use(`/customModes`,customModesRouter)
+
+// Роутер для /statistics(статистики)
+app.use(`/statistics`,statisticsRouter)
 
 // Обработчик для всех остальных путей
 app.use((req,res)=> {
