@@ -7,7 +7,7 @@ import { authenticateToken } from "../middlewares/auth.js"
 router.get('/', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId
-        const { start_date, end_date } = req.body
+        const { start_date, end_date } = req.query
 
         if (!start_date || !end_date) {
             return res.status(400).json({ error: 'Поля start_date и end_date обязательны!' })
