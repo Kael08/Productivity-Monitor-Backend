@@ -111,7 +111,7 @@ router.patch("/update", authenticateToken, async (req, res) => {
         // Выполняем обновление
         const updatedNote = await dbClient.query(
             `UPDATE notes
-             SET ${updateFields.join(', ')}, updated_atd = NOW()
+             SET ${updateFields.join(', ')}, updated_at = NOW()
              WHERE id = $${paramCount}
              RETURNING *`,
             updateValues

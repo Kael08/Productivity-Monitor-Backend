@@ -21,13 +21,13 @@ router.post("/",async(req,res)=>{
         )
 
         if(userCredResult.rows.length===0)
-            return res.status(404).json({error:`Неверный логин или пароль`})
+            return res.status(401).json({error:`Неверный логин или пароль`})
 
         const userCred=userCredResult.rows[0]
 
         const isPasswordValid = await bcrypt.compare(password,userCred.password_hash)
         if(!isPasswordValid)
-            return res.status(401).json({error:`Неверный логин или пароль`})
+            return res.status(404).json({error:`Неверный логин или пароль`})
 
         const userResult = await dbClient.query(
             `SELECT * FROM users WHERE id = $1`,
